@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría Médica | Protocolos de Ambulancia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #064e3b;
+            --accent-green: #10b981;
+            --soft-green: #ecfdf5;
+            --medical-blue: #2563eb;
+            --text-main: #1f2937;
+            --bg-body: #f3f4f6;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .dashboard {
+            width: 95vw;
+            height: 90vh;
+            max-width: 1200px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .login-screen {
+            position: absolute;
+            inset: 0;
+            background: var(--primary-green);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        .input-name {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        header {
+            height: 70px;
+            background: var(--primary-green);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            flex-shrink: 0;
+        }
+
+        header h1 { font-size: 1.1rem; letter-spacing: 1px; font-weight: 700; }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .case-sidebar {
+            width: 40%;
+            background: linear-gradient(180deg, #065f46 0%, #064e3b 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .case-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            width: fit-content;
+            margin-bottom: 20px;
+        }
+
+        .case-content h2 { font-size: 1.4rem; margin-bottom: 20px; line-height: 1.4; font-weight: 600; }
+        .question-highlight {
+            background: rgba(16, 185, 129, 0.2);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .options-area {
+            width: 60%;
+            padding: 40px;
+            overflow-y: auto;
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-bottom: 100px;
+        }
+
+        .option-card {
+            background: white;
+            border: 2px solid #f3f4f6;
+            padding: 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-card:hover { border-color: var(--accent-green); }
+        .option-card.selected { border: 2px solid var(--medical-blue) !important; }
+        .option-card.correct-key { border-left: 6px solid var(--accent-green) !important; }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.95rem;
+        }
+        .feedback.error { background: #fee2e2; color: #991b1b; }
+        .feedback.success { background: #dcfce7; color: #166534; }
+
+        footer {
+            height: 80px;
+            padding: 0 40px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn { padding: 12px 30px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; }
+        .btn-primary { background: var(--accent-green); color: white; }
+        .btn-next { background: var(--medical-blue); color: white; display: none; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div id="loginOverlay" class="login-screen">
+        <div class="login-box">
+            <h2>Auditoría Clínica</h2>
+            <input type="text" id="docInput" class="input-name" placeholder="Nombre completo del médico">
+            <button class="btn btn-primary" onclick="startApp()">ACCEDER AL MÓDULO</button>
+        </div>
+    </div>
+
+    <header>
+        <h1>AMBULANCE PROTOCOL AUDIT</h1>
+        <div id="headerDoc">MÉDICO: ---</div>
+    </header>
+
+    <div class="main-container">
+        <div class="case-sidebar">
+            <div id="caseCounter" class="case-tag">CASO 1 DE 5</div>
+            <div class="case-content">
+                <h2 id="caseText">Cargando...</h2>
+                <div class="question-highlight" id="questionText">Cargando...</div>
+            </div>
+        </div>
+        <div class="options-area" id="optionsContainer"></div>
+    </div>
+
+    <footer>
+        <button id="nextBtn" class="btn btn-next" onclick="nextSlide()">Siguiente Caso →</button>
+        <button id="finishBtn" class="btn btn-next" onclick="enviarYFinalizar()" style="background: var(--primary-green);">Finalizar y Guardar</button>
+    </footer>
+</div>
+
+<script>
+    // --- CONFIGURACIÓN ---
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUBKWH6DH36A_Y-cDDI_X264g5ghZ4t_4S425E4tj-HyS0Qzfxv65UaDRVcWboRirXvQ/exec"; 
+
+    let historialRespuestas = [];
+    let contadorCorrectas = 0;
+    let contadorIncorrectas = 0;
+    let current = 0;
+    let selectedFirst = false;
+
+    const banco = [
+        {
+            caso: "Paciente refiere dolor abdominal, fue atendido ayer en clínica y le dieron de alta (gastroenteritis). Llama de nuevo por persistencia de síntomas.",
+            pregunta: "¿Cuál debería ser mi accionar?",
+            opciones: [
+                { t: "a) Brindar analgésicos y recomendar seguir medicación.", fb: "Error. El paciente es trasladado luego de 6rs a clinica por apendicitis complicada. recordar Politica N° 15, Si una ambulancia evalúa un paciente que ha recibido atención por otro médico y el motivo de llamada es el mismo (persistencia del síntoma) se traslada para que sea evaluado por el especialista y se registra en la HCL que ya ha sido atendido por otro médico..", ok: false },
+                { t: "b) Recomendar comida blanda y llamar si persisten las molestias .", fb: "Error. El paciente acaba con apendicitis complicada. recordar Politica N° 15, Si una ambulancia evalúa un paciente que ha recibido atención por otro médico y el motivo de llamada es el mismo (persistencia del síntoma) se traslada para que sea evaluado por el especialista y se registra en la HCL que ya ha sido atendido por otro médico..", ok: false },
+                { t: "c) Evaluación médica e indicar traslado a Clínica.", fb: "Correcto. recordar Politica N° 15, Si una ambulancia evalúa un paciente que ha recibido atención por otro médico y el motivo de llamada es el mismo (persistencia del síntoma) se traslada para que sea evaluado por el especialista y se registra en la HCL que ya ha sido atendido por otro médico..", ok: true }
+            ],
+            correctas: [2]
+        },
+        {
+            caso: "Mujer de 30 años, alérgica a AINES (dice tolerar Metamizol). Fiebre 38°C, dolor de garganta. Examen físico normal.",
+            pregunta: "¿Qué acciones se tomarían?",
+            opciones: [
+                { t: "a) Metamizol 500mg IM ( Dosis reducida) + Paracetamol 500mg por via oral .", fb: "Crítico. … Paciente presenta angioedema y es trasladada al area de trauma shock de clinica, presenta su denuncia a susalud - refiere que consulto con familiar medico que le informo que no debieron colocar esa medicacion. Adicionar que si fiebre es persistente a pesar de toma de antipireticos la indicacion es traslado .", ok: false },
+                { t: "b) Se indica 02 tabletas de Paracetamol, uso de medios fisicos en caso de persistir las molestias comunicarse nuevamente..", fb: "Correcto. … Correcto - considerar que no presente signos de alarma: Edad>60 años, Hipotension, Frecuencia respiratoria aumentada o uso musculos accesorios, presencia de enfisema subcutaneo ( neumotorax espontaneo) y siempre consultar por antecedentes de trauma u otros, tambien es adecuada la respuesta C.", ok: true },
+                { t: "c) Se indica traslado a Clinica para continuar evalucion y tratamiento.", fb: "Correcto .. Considerar en pacientes que refieren ya tomaron medicacion antipiretica ( Paracetamol) y persiste la fiebre..", ok: true }
+            ],
+            correctas: [1, 2]
+        },
+        {
+            caso: "Se recibe llamada para atencion en madrugada aproximadamente a las 03:40hrs Paciente varon de 55 años, refiere presenta cefalea asociada a mareos que iniciaron aproximadamente hace 3 horas, niega antecedentes previos.",
+            pregunta: "¿Que acciones realizariamos?",
+            opciones: [
+                { t: "a) Se indica dimenhidrinato 50mg por via endovenosa, se indica a paciente comunicarse nuevamente.", fb: "Grave. … se confirma ACV Cerebelar. -- se recuerda la politica: 'Pacientes que consultan por Migraña o Cefalea... se tiene que descartar ACV...'", ok: false },
+                { t: "b) Se indica traslado a Clinica para evaluacion por area de emergencia.", fb: "Correcto - se tiene un signo de alerta critico - presencia de menos de 6hrs de presentacion de cefalea y mareo...", ok: true },
+                { t: "c) Se indica analgesico ketorolaco 30mg por via endovenosa + dimenhidrinato 50mg EV.", fb: "Grave. … se confirma ACV Cerebelar. -- se recuerda la politica: 'Pacientes que consultan por Migraña o Cefalea... se tiene que descartar ACV...'", ok: false }
+            ],
+            correctas: [1]
+        },
+        {
+            caso: "Se recibe llamada para atencion de paciente mujer de 40 años con antecedentes de hipertension, Niega alergias, refiere dolor en articulacion, niega contusion, no caidas.",
+            pregunta: "¿Cuál es el tratamiento?",
+            opciones: [
+                { t: "a) Se indica Diclofenaco 75mg por via intramuscular.", fb: "Correcto. … paciente refiere mejoria -- recordar politica N°4 - 'Todos los pacientes mayores de 65 años...'", ok: true },
+                { t: "b) Se indica traslado a Clinica..", fb: " … paciente acude a clinica donde es dada de alta luego de 30 minutos.. Reclamo en aseguradora... recordar politica: N°4.", ok: false },
+                { t: "c) Se indica Orfenadrina 60mg por via intramuscular.", fb: "… reclamo por el servicio. Recordar que debe tener congruencia entre anamesis y tratamiento.", ok: false }
+            ],
+            correctas: [0]
+        },
+        {
+            caso: "Paciente varon de 60 años con antecedente de hipertension se encuentra en la playa y refiere consumo de ceviche y cerveza, llama por dolor en epigastrio y nauseas.",
+            pregunta: "¿Qué tratamiento brindaría?",
+            opciones: [
+                { t: "a) Se indica omeprazol 20mg por via endovenosa y hioscina 20mg EV.", fb: " ... Paciente fallece por infarto al miocardio ... Recordar politica N° 5 : 'Pacientes con antecedentes cardiacos...'", ok: false },
+                { t: "b) Se indica traslado a Clinica por diagnostico de Dolor abdominal a D/C Gastritis", fb: "… al llegar se hace evidente un infarto al miocardio. Recordar politica N° 5.", ok: false },
+                { t: "c)Se indica traslado a Clinica con otro diagnostico asociado", fb: ".. Correcto y el diagnostico mas probable es : Infarto al miocardio, se debe realizar la toma de ECG + traslado. Recordar politica N° 5.", ok: true }
+            ],
+            correctas: [2]
+        }
+    ];
+
+    function startApp() {
+        const name = document.getElementById('docInput').value;
+        if(!name.trim()) return alert("Ingrese su nombre");
+        document.getElementById('headerDoc').innerText = "MÉDICO: " + name.toUpperCase();
+        document.getElementById('loginOverlay').classList.add('hidden');
+        renderSlide();
+    }
+
+    function renderSlide() {
+        selectedFirst = false;
+        const q = banco[current];
+        document.getElementById('caseCounter').innerText = `CASO ${current + 1} DE ${banco.length}`;
+        document.getElementById('caseText').innerText = q.caso;
+        document.getElementById('questionText').innerText = q.pregunta;
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('finishBtn').style.display = 'none';
+
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        q.opciones.forEach((opt, i) => {
+            const card = document.createElement('div');
+            card.className = 'option-card';
+            card.id = `card-${i}`;
+            card.innerHTML = `<div style="font-weight:600;">${opt.t}</div><div id="fb-${i}" class="feedback"></div>`;
+            card.onclick = function() { showFeedback(i); };
+            container.appendChild(card);
+        });
+        container.scrollTop = 0;
+    }
+
+    function showFeedback(idx) {
+        const q = banco[current];
+        const opt = q.opciones[idx];
+        const fbDiv = document.getElementById(`fb-${idx}`);
+
+        fbDiv.innerText = opt.fb;
+        fbDiv.style.display = 'block';
+        fbDiv.className = 'feedback ' + (opt.ok ? 'success' : 'error');
+
+        if (!selectedFirst) {
+            selectedFirst = true;
+            document.getElementById(`card-${idx}`).classList.add('selected');
+            
+            historialRespuestas.push(opt.t);
+            if(opt.ok) { contadorCorrectas++; } else { contadorIncorrectas++; }
+
+            q.correctas.forEach(cIdx => {
+                document.getElementById(`card-${cIdx}`).classList.add('correct-key');
+            });
+
+            if(current < banco.length - 1) {
+                document.getElementById('nextBtn').style.display = 'block';
+            } else {
+                document.getElementById('finishBtn').style.display = 'block';
+            }
+        }
+    }
+
+    function nextSlide() {
+        current++;
+        renderSlide();
+    }
+
+    function enviarYFinalizar() {
+        const payload = {
+            medico: document.getElementById('headerDoc').innerText.replace("MÉDICO: ", ""),
+            respuestas: historialRespuestas,
+            correctas: contadorCorrectas,
+            incorrectas: contadorIncorrectas
+        };
+
+        fetch(WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify(payload)
+        });
+
+        document.querySelector('.main-container').innerHTML = `
+            <div style="padding:100px; text-align:center; width:100%;">
+                <h1 style="color:var(--primary-green)">Auditoría Finalizada</h1>
+                <p>Datos enviados correctamente.</p>
+                <br>
+                <button class="btn btn-primary" onclick="location.reload()">Nuevo Registro</button>
+            </div>
+        `;
+        document.getElementById('finishBtn').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
