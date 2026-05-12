@@ -1,364 +1,711 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Auditoría Médica | Protocolos</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
+
         :root {
+
             --primary-green: #064e3b;
+
             --accent-green: #10b981;
+
             --medical-blue: #2563eb;
+
             --bg-body: #f3f4f6;
+
             --white: #ffffff;
+
         }
+
+
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+
+
         body {
+
             font-family: 'Inter', sans-serif;
+
             background-color: var(--bg-body);
+
             color: #1f2937;
+
             min-height: 100vh;
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
         }
+
+
 
         .dashboard {
+
             width: 100%;
+
             max-width: 1200px;
+
             height: 95vh;
+
             background: var(--white);
+
             display: flex;
+
             flex-direction: column;
+
             overflow: hidden;
+
             position: relative;
+
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
         }
 
+
+
+        /* Responsive para celular: permitimos scroll general y altura automática */
+
         @media (max-width: 768px) {
+
             body { align-items: flex-start; }
+
             .dashboard { height: auto; min-height: 100vh; border-radius: 0; }
+
         }
+
+
+
+        /* Pantalla de Identificación */
 
         .login-screen {
+
             position: absolute;
+
             inset: 0;
+
             background: var(--primary-green);
+
             z-index: 1000;
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             padding: 20px;
+
         }
+
+
 
         .login-box {
+
             background: white;
+
             padding: 30px;
+
             border-radius: 16px;
+
             width: 100%;
+
             max-width: 400px;
+
             text-align: center;
+
         }
+
+
 
         .input-name {
+
             width: 100%;
+
             padding: 14px;
+
             margin: 20px 0;
+
             border: 2px solid #e5e7eb;
+
             border-radius: 8px;
+
             font-size: 1rem;
+
         }
+
+
 
         header {
+
             height: 60px;
+
             background: var(--primary-green);
+
             color: white;
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             padding: 0 20px;
+
             flex-shrink: 0;
+
             font-size: 0.9rem;
+
         }
+
+
+
+        /* Contenedor Principal */
 
         .main-container {
+
             display: flex;
+
             flex: 1;
+
             overflow: hidden;
+
         }
 
+
+
         @media (max-width: 768px) {
+
             .main-container { flex-direction: column; overflow: visible; }
+
         }
+
+
+
+        /* Columna Caso */
 
         .case-sidebar {
+
             width: 40%;
+
             background: linear-gradient(180deg, #065f46 0%, #064e3b 100%);
+
             color: white;
+
             padding: 30px;
+
             overflow-y: auto;
+
         }
 
+
+
         @media (max-width: 768px) {
+
             .case-sidebar { width: 100%; overflow-y: visible; padding: 20px; }
+
         }
+
+
 
         .case-tag {
+
             background: rgba(255,255,255,0.2);
+
             padding: 4px 10px;
+
             border-radius: 20px;
+
             font-size: 0.7rem;
+
             display: inline-block;
+
             margin-bottom: 15px;
+
         }
+
+
+
+        /* Columna Opciones */
 
         .options-area {
+
             width: 60%;
+
             padding: 30px;
+
             overflow-y: auto;
+
             background: #f9fafb;
+
             display: flex;
+
             flex-direction: column;
+
             gap: 12px;
+
         }
 
+
+
         @media (max-width: 768px) {
+
             .options-area { width: 100%; overflow-y: visible; padding: 20px 20px 100px 20px; }
+
         }
+
+
 
         .option-card {
+
             background: white;
+
             border: 2px solid #f3f4f6;
+
             padding: 18px;
+
             border-radius: 12px;
+
             cursor: pointer;
+
             transition: 0.2s;
+
         }
+
+
 
         .option-card.selected { border: 2px solid var(--medical-blue); background: #f0f7ff; }
+
         .option-card.correct-key { border-left: 6px solid var(--accent-green) !important; }
 
+
+
         .feedback {
+
             margin-top: 10px;
+
             padding: 12px;
+
             border-radius: 8px;
+
             display: none;
+
             font-size: 0.9rem;
+
         }
+
         .feedback.error { background: #fee2e2; color: #991b1b; }
+
         .feedback.success { background: #dcfce7; color: #166534; }
 
+
+
+        /* Footer Fijo */
+
         footer {
+
             height: 70px;
+
             padding: 0 20px;
+
             background: white;
+
             border-top: 1px solid #e5e7eb;
+
             display: flex;
+
             justify-content: flex-end;
+
             align-items: center;
+
             flex-shrink: 0;
+
         }
+
+
 
         @media (max-width: 768px) {
+
             footer { position: fixed; bottom: 0; width: 100%; z-index: 500; }
+
         }
+
+
 
         .btn { padding: 12px 24px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; }
+
         .btn-primary { background: var(--accent-green); color: white; width: 100%; }
+
         .btn-next { background: var(--medical-blue); color: white; display: none; }
+
         .hidden { display: none !important; }
+
     </style>
+
 </head>
+
 <body>
 
+
+
 <div class="dashboard">
+
     <div id="loginOverlay" class="login-screen">
+
         <div class="login-box">
+
             <h2 style="color:var(--primary-green)">Auditoría Clínica</h2>
-            <input type="text" id="docInput" class="input-name" placeholder="Nombre completo" onkeypress="if(event.key==='Enter') startApp()">
+
+            <input type="text" id="docInput" class="input-name" placeholder="Nombre completo">
+
             <button class="btn btn-primary" onclick="startApp()">ACCEDER</button>
+
         </div>
+
     </div>
+
+
 
     <header>
+
         <h1 id="mobileTitle">AUDIT PROTOCOL</h1>
+
         <div id="headerDoc">MÉDICO: ---</div>
+
     </header>
 
+
+
     <div class="main-container">
+
         <div class="case-sidebar">
+
             <div id="caseCounter" class="case-tag">CASO 1 DE 6</div>
+
             <div class="case-content">
+
                 <h3 id="caseText" style="font-size: 1.1rem; margin-bottom: 15px;">Cargando...</h3>
+
                 <div class="question-highlight" id="questionText" style="font-size: 0.95rem;">Cargando...</div>
+
             </div>
+
         </div>
+
         <div class="options-area" id="optionsContainer"></div>
+
     </div>
 
+
+
     <footer>
+
         <button id="nextBtn" class="btn btn-next" onclick="nextSlide()">Siguiente Caso →</button>
+
         <button id="finishBtn" class="btn btn-next" onclick="enviarYFinalizar()" style="background: var(--primary-green);">Guardar Auditoría</button>
+
     </footer>
+
 </div>
 
+
+
 <script>
+
+    // --- PEGA TU URL AQUÍ ---
+
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyUBKWH6DH36A_Y-cDDI_X264g5ghZ4t_4S425E4tj-HyS0Qzfxv65UaDRVcWboRirXvQ/exec"; 
 
+
+
     let historialRespuestas = [];
+
     let contadorCorrectas = 0;
+
     let contadorIncorrectas = 0;
+
     let current = 0;
+
     let selectedFirst = false;
 
+
+
+    // EL CONTENIDO SE MANTIENE ÍNTEGRO
+
     const banco = [
+
         {
-            caso: "Paciente varon de 30 años refiere dolor abdominal, fue atendido el dia de ayer en clínica, se realizo toma de analitica y ecografia, brindando el alta con dignostico de gastroenteritis. Se comunica con servicio de ambulancia por persistencia de síntomas.",
+
+            caso: "Paciente varon de 30 años refiere dolor abdominal, fue atendido el dia de  ayer en clínica, se realizo toma de analitica y ecografia, brindando el alta con dignostico de gastroenteritis. Se comunica con servicio de ambulancia por  persistencia de síntomas.",
+
             pregunta: "¿Cuál debería ser mi accionar?",
+
             opciones: [
-                { t: "a) Brindar medicacion sintomatica (analgésicos) y recomendar seguir medicación.", fb: "Error. El paciente es trasladado luego de 6rs a clinica por apendicitis complicada. recordar Politica N° 15...", ok: false },
-                { t: "b) Recomendar dieta blanda y comunicarse nuevamente si persisten los sintomas .", fb: "Error. El paciente es trasladado luego de 6rs a clinica por apendicitis complicada. recordar Politica N° 15...", ok: false },
-                { t: "c) Evaluación médica e indicar traslado a Clínica.", fb: "Correcto. recordar Politica N° 15...", ok: true }
+
+                { t: "a) Brindar medicacion sintomatica (analgésicos) y recomendar seguir medicación.", fb: "Error. El paciente es trasladado luego de 6rs a clinica por apendicitis complicada. recordar Politica N° 15, Si una ambulancia evalúa un paciente que ha recibido atención por otro médico y el motivo de llamada es el mismo (persistencia del síntoma) se traslada para que sea evaluado por el especialista y se registra en la HCL que ya ha sido atendido por otro médico..", ok: false },
+
+                { t: "b) Recomendar dieta  blanda y comunicarse nuevamente si persisten los sintomas .", fb: "Error. El paciente es trasladado luego de 6rs a clinica por apendicitis complicada. recordar Politica N° 15, Si una ambulancia evalúa un paciente que ha recibido atención por otro médico y el motivo de llamada es el mismo (persistencia del síntoma) se traslada para que sea evaluado por el especialista y se registra en la HCL que ya ha sido atendido por otro médico..", ok: false },
+
+                { t: "c) Evaluación médica e indicar traslado a Clínica.", fb: "Correcto. recordar Politica N° 15, Si una ambulancia evalúa un paciente que ha recibido atención por otro médico y el motivo de llamada es el mismo (persistencia del síntoma) se traslada para que sea evaluado por el especialista y se registra en la HCL que ya ha sido atendido por otro médico..", ok: true }
+
             ],
+
             correctas: [2]
+
         },
+
         {
+
             caso: "Paciente mujer de 30 años refiere ser alérgica a AINES pero tolera el Metamizol. presenta temperatura de 38°C y dolor de garganta. Al Examen físico Murmullo vesicular en ambos campos pulmonares, no ruidos agregados. Orofaringe: no presencia de tumoraciones.",
+
             pregunta: "¿Qué acciones se tomarían?",
+
             opciones: [
-                { t: "a) Se indica Metamizol 500mg por via intramuscular ( Dosis reducida) + Paracetamol 500mg por via oral .", fb: "Crítico. … Paciente presenta angioedema...", ok: false },
-                { t: "b) Se indica 02 tabletas de Paracetamol, uso de medios fisicos en caso de persistir las molestias comunicarse nuevamente..", fb: "Correcto. … considerar que no presente signos de alarma...", ok: true },
-                { t: "c) Se indica traslado a Clinica para continuar evalucion y tratamiento.", fb: "Correcto .. Considerar en pacientes que refieren ya tomaron medicacion antipiretica...", ok: true }
+
+                { t: "a) Se indica Metamizol 500mg por via intramuscular ( Dosis reducida) + Paracetamol 500mg por via oral .", fb: "Crítico. … Paciente presenta angioedema y es trasladada al area de trauma shock de clinica, presenta su denuncia a susalud - refiere que consulto con familiar medico que le informo que no debieron colocar esa medicacion. ", ok: false },
+
+                { t: "b) Se indica 02 tabletas de Paracetamol, uso de medios fisicos en caso de persistir las molestias comunicarse nuevamente..", fb: "Correcto. … Correcto - considerar que no presente signos de alarma: Edad>60 años, Hipotension, Frecuencia respiratoria aumentada o uso musculos accesorios, presencia de enfisema subcutaneo ( neumotorax espontaneo) y siempre consultar por antecedentes de trauma u otros, tambien es adecuada la respuesta C.", ok: true },
+
+                { t: "c) Se indica traslado a Clinica para continuar evalucion y tratamiento.", fb: "Correcto .. Considerar en pacientes que refieren ya tomaron medicacion antipiretica ( Paracetamol) y persiste la fiebre..", ok: true }
+
             ],
+
             correctas: [1, 2]
+
         },
+
         {
-            caso: "Se recibe llamada para atencion en madrugada aproximadamente a las 03:40hrs Paciente varon de 55 años, refiere presenta cefalea asociada a mareos que iniciaron aproximadamente hace 3 horas, niega antecedentes previos.",
+
+            caso: "Se recibe llamada para atencion en madrugada aproximadamente a las 03:40hrs Paciente varon de 55 años, refiere presenta cefalea asociada a mareos que iniciaron aproximadamente hace 3 horas, niega antecedentes previos. Al examen neurologico: Despierto, reactivo, moviliza 4 extremidades, sensibilidad conservada, no disartria, no asimetria facial.",
+
             pregunta: "¿Que acciones realizariamos?",
+
             opciones: [
-                { t: "a) Se indica Dimenhidrinato 50mg por via endovenosa, se indica a paciente comunicarse nuevamente en caso sintomas persistan.", fb: "Grave. … se confirma ACV Cerebelar...", ok: false },
-                { t: "b) Se indica traslado a Clinica para evaluacion por area de emergencia.", fb: "Correcto - se tiene un signo de alerta critico...", ok: true },
-                { t: "c) Se indica analgesico ketorolaco 30mg por via endovenosa + dimenhidrinato 50mg por via endovenosa...", fb: "Grave. … se confirma ACV Cerebelar...", ok: false }
+
+                { t: "a) Se indica Dimenhidrinato 50mg por via endovenosa, se indica a paciente comunicarse nuevamente en caso sintomas persistan.", fb: "Grave. … Aproximadamente a las 6am familiar de paciente se vuelve a comunicar, refeire que paciente no puede movilizar la mitad derecha de su cuerpo, se realiza traslado a Clinica donde se confirma ACV Cerebelar. -- se recuerda la politica: 'Pacientes que consultan por Migraña o Cefalea de reciente comienzo o caracteristicas diferentes a las acostumbradas: signos y sintomas de focalizacion neurologica ( Vision Borrosa, disartria, mareos, adormecicmiento, hormigueos, perdida de fuerza de alguna de las extremidades) se tiene que descartar ACV y se traslada para examenes auxiliares y evalucion por especialidad..'", ok: false },
+
+                { t: "b) Se indica traslado a Clinica para evaluacion por area de emergencia.", fb: "Correcto - se tiene un signo de alerta critico - presencia de menos de 6hrs de presentacion de cefalea y mareo  en un paciente que no sufre de estos sintomas, adicionalmente se tiene un examen fisico incompleto - para D/C ACV cerebelar adicionar evaluacion de marcha ataxica, nistagmo, etc-  se recuerda la politica: 'Pacientes que consultan por Migraña o Cefalea de reciente comienzo o caracteristicas diferentes a las acostumbradas: signos y sintomas de focalizacion neurologica ( Vision Borrosa, disartria, mareos, adormecicmiento, hormigueos, perdida de fuerza de alguna de las extremidades) se tiene que descartar ACV y se traslada para examenes auxiliares y evalucion por especialidad ..", ok: true },
+
+                { t: "c) Se indica analgesico ketorolaco 30mg por via endovenosa + dimenhidrinato 50mg por via endovenosa, comunicarse nuevamente en caso sintomas persistan.", fb: "Grave. … Aproximadamente a las 6am familiar de paciente se vuelve a comunicar, refeire que paciente no puede movilizar la mitad derecha de su cuerpo, se realiza traslado a Clinica donde se confirma ACV Cerebelar. -- se recuerda la politica: 'Pacientes que consultan por Migraña o Cefalea de reciente comienzo o caracteristicas diferentes a las acostumbradas: signos y sintomas de focalizacion neurologica ( Vision Borrosa, disartria, mareos, adormecicmiento, hormigueos, perdida de fuerza de alguna de las extremidades) se tiene que descartar ACV y se traslada para examenes auxiliares y evalucion por especialidad..'", ok: false }
+
             ],
+
             correctas: [1]
+
         },
+
         {
-            caso: "Se recibe llamada para atencion de paciente mujer de 40 años con antecedentes de hipertension, Niega alergias, refiere dolor en articulacion, niega contusion, no caidas.",
+
+            caso: "Se recibe llamada para atencion de paciente mujer de 40 años con antecedentes de hipertension, Niega alergias, refiere dolor en articulacion, niega contusion, no caidas. Al momento de la evaluacion leve dolor a la movilizacion. Funciones Vitales: PA:130/70mmHg, FC: 88lpm, FR: 17rpm, Sat: 96%.",
+
             pregunta: "¿Que indicaciones brindaria?",
+
             opciones: [
-                { t: "a) Se indica Diclofenaco 75mg por via intramuscular, se indica a paciente comunicarse nuevamente en caso sintomas persistan", fb: "Correcto. … recordar politica N°4", ok: true },
-                { t: "b) Se indica traslado a Clinica..", fb: " … paciente acude a clinica donde es dada de alta luego de 30 minutos...", ok: false },
-                { t: "c) Se indica Orfenadrina 60mg por via intramuscular...", fb: "… recordar que nuestra historia clinica debe tener congruencia...", ok: false }
+
+                { t: "a) Se indica Diclofenaco 75mg por via intramuscular, se indica a paciente comunicarse nuevamente en caso sintomas persistan", fb: "Correcto. … paciente refiere mejoria, continuo luego con citas por especialidad de medicina interna -- recordar politica N°4 - Todos los pacientes  que sufren traumatismo (Caidas, contusiones) se trasladan para examenes auxiliares y descartar fractura. ", ok: true },
+
+                { t: "b) Se indica traslado a Clinica..", fb: " … paciente acude a clinica donde es dada de alta luego de 30 minutos. Paciente presenta reclamo a aseguradora debido a que medico de clinica indico que no requeria evaluacion en area de emergencia . recordar politica: N°4.- Todos los pacientes  que sufren traumatismo (Caidas, contusiones) se trasladan para examenes auxiliares y descartar fractura", ok: false },
+
+                { t: "c) Se indica Orfenadrina 60mg por via intramuscular, se indica a paciente comnunicarse nuevamente en caso sintomas persistan", fb: "… paciente realiza busqueda en internet, visualiza que medicacion Orfenadrina no tiene ningun efecto sobre las articulaciones, presenta un reclamo por el servicio. REcordar que nuestra historia clinica debe tener congruencia entre anamnesis, examen fisico, diagnostico y tratamiento. En este caso no existe al aplicar un miorelajante en un dolor articular. Recordar politica N°4-Todos los pacientes  que sufren traumatismo (Caidas, contusiones) se trasladan para examenes auxiliares y descartar fractura .", ok: false }
+
             ],
+
             correctas: [0]
+
         },
+
         {
-            caso: "Paciente varon de 60 años con antecedente de hipertension se encuentra en la playa y refiere consumo de ceviche y tomo alcohol en poca cantidad, presenta dolor en epigastrio.",
+
+            caso: "Paciente varon de 60 años con antecedente de hipertension se encuentra en la playa y refiere consumo de ceviche y tomo  alcohol en poca cantidad, llama al servicio de ambulancia debido a que presenta dolor en epigastrio, nauseas, no vomitos, no deposiciones liquidas,no fiebre. Al examen: Aparato respiratorio: murmullo vesicular en ambos campos pulmonares, no ruidos agregados. Cardiovascular: ruidos cardiacos ritmicos, no soplos. Abdomen: blando, depresible, RHA+, rebote negativo, murphy negativo, leve doloroso en epigastrio. Genitourinario: Puño percusion lumbar bilateral negativo. Piel: tibia, elastica, hidratada.",
+
             pregunta: "¿Qué tratamiento brindaría?",
+
             opciones: [
-                { t: "a) Se indica omeprazol 20mg por via endovenosa y hioscina 20mg EV...", fb: " ... Paciente fallece por infarto al miocardio ... Recordar politica N° 5", ok: false },
-                { t: "b) Se indica traslado a Clinica por diagnostico de Dolor abdominal a D/C Gastritis", fb: "… se hace evidente un infarto al miocardio...", ok: false },
-                { t: "c) Se indica traslado a Clinica con otro diagnostico asociado", fb: ".. Correcto e el diagnostico mas probable es : Infarto al miocardio...", ok: true }
+
+                { t: "a) Se indica omeprazol 20mg por via endovenosa y hioscina 20mg EV, se indica volver a comunicarse en caso sintomas persistan.", fb: " ... Familiar de paciente se comunica luego de 2 horas, refiere que paciente se ha desmayado y no responde, acude unidad  -paciente en paro cardiorespiratorio - se recupera a clinica donde fallece dias despues por diagnostico de infarto al miocardio. Paciente fallece por infarto al miocardio ... Recordar politica N° 5 : Pacientes con antecedentes cardiacos: HTA, diabetes, Postoperado del corazon, edad mayor de 60 años dislipidemia, arritmia, obesidad o fumador cronico, y consulta por dolor toracico o abdominal se realiza toma de electrocardiograma y se traslada para descartar patologia isquemica cardiaca..", ok: false },
+
+                { t: "b) Se indica traslado a Clinica por diagnostico de Dolor abdominal a D/C Gastritis", fb: "… se realiza traslado del paciente al llegar a clinica, por los sintomas se realiza toma de electrocardiograma para evaluacion por probable infarto al miocardio se hace evidente un infarto al miocardio, medico de Clinica refiere al paciente que el servicio brindado fue poco profesional, paciente presenta reclamo. Recordar politica N° 5.: Pacientes con antecedentes cardiacos: HTA, diabetes, Postoperado del corazon, edad mayor de 60 años dislipidemia, arritmia, obesidad o fumador cronico, y consulta por dolor toracico o abdominal se realiza toma de electrocardiograma y se traslada para descartar patologia isquemica cardiaca.", ok: false },
+
+                { t: "c)Se indica traslado a Clinica con otro diagnostico asociado", fb: ".. Correcto y el diagnostico mas probable es : Infarto al miocardio, se debe realizar la toma de ECG + Colocacion de via periferica, oxigeno ( en caso Sat<90%, evitar uso de AINES). Recordar politica N° 5 Pacientes con antecedentes cardiacos: HTA, diabetes, Postoperado del corazon, edad mayor de 60 años dislipidemia, arritmia, obesidad o fumador cronico, y consulta por dolor toracico o abdominal se realiza toma de electrocardiograma y se traslada para descartar patologia isquemica cardiaca.", ok: true }
+
             ],
+
             correctas: [2]
+
         },
+
         {
-            caso: "Paciente mujer de 35 años presenta dolor abdominal en epigastrio que inicia hace 24hrs tipo ardor, irradiado hacia region lumbar. Refiere que siempre le colocan 3 medicamentos.",
+
+            caso: "Paciente mujer de 35 años sin antecedentes previos, niega alergias  presenta dolor abdominal en epigastrio que inicia hace 24hrs tipo ardor, nauseas, vomito 1 vez,  dolor se irradia hacia region lumbar.  Al examen: Piel, no ictericia, no palidez. Aparato respiratorio: murmullo vesicular en ambos campos pulmonares, no ruidos agregados. Cardiovascular: Ruidos cardiacos ritmicos, no soplos., Abdomen: Blando, depresible, doloroso en epigastrio y leve mesogastrio, rebote negativo, McBurney negativo,murphy negativo. Genitourinario: Puño percusion lumbar bilateral negativo.Adicionalmente paciente refiere al termino de la evalucion que intermetentemente sufre de estas molestias y siempre le colocan 3 medicamentos",
+
             pregunta: "¿Qué tratamiento brindaría?",
+
             opciones: [
-                { t: "a) Se indica Metamizol 1gr + omeprazol 20mg + hioscina 20mg EV diluido en 1 jeringa de 20cc...", fb: " ... Diagnostico de pancreatitis y tromboflebitis con necrosis local...", ok: false },
-                { t: "b) Se indica hioscina 20mg y Dimenhidrinato 50mg EV y volver a comunicarse...", fb: "… se recuerda que toda politica es en beneficio del paciente...", ok: false },
-                { t: "c) Se indica hioscina 20mg y Dimenhidrinato 50mg EV y traslado a Clinica", fb: ".. Correcto y el diagnostico mas probable es : Pancreatitis aguda...", ok: true }
+
+                { t: "a) Se indica Metamizol 1gr +  omeprazol 20mg por via endovenosa + hioscina 20mg por via endovenosa diluido en 1 jeringas de 20cc, se indica volver a comunicarse en caso sintomas persistan.", fb: " ... Familiar de paciente se comunica luego de 2 horas, refiere dolor intenso en zona de aplicacion  con cambios de coloracion, adicionalmente de diagnostico confirmado de pancreatitis en Clinica. En referencia a lesion en brazo se culmina con diagnostico de tromboflebitis con necrosis local con cura quirugica y terapia fisica por 3 meses, paciente presenta reclamo a susalud.  ... Recordar politica N° 13 : P No se aplican medicamentos que no se provean del servicio de ambulancia, no se aplican más de 2 medicamentos a un solo paciente. (Excepción: Emergencias reales). y adicionalmente el medicamento Omeprazol se debe diluir en 100cc y no se debe mezclar con ningun otro medicamento.", ok: false },
+
+                { t: "b) Se indica hioscina 20mg y Dimenhidrinato 50mg por via endovenosa y volver a comunicarse en caso sintomas persistan, adicionalmente  se indica que por politicas de Aseguradora  no se puede aplicar mas medicamentos", fb: "…  paciente llama luego de 20 minutos a Central medica a quejarse debido a que le indicaron que no podrian aplicarle mas medicamentos debido a que presume desean ahorrar en su tratamiento...  se recuerda que toda politica es en beneficio del paciente y cuenta con literatura de respaldo, en casos similares aclarar que la administracion de maximo 02 medicamentos en una aplicacion prehospitalaria esta asociado en disminuir el riesgo de flebitis quimica, precipitaciones y otras  interacciones entre medicamentos que puedan afectar su efectividad.  Recordar politica N° 13 : P No se aplican medicamentos que no se provean del servicio de ambulancia, no se aplican más de 2 medicamentos a un solo paciente. (Excepción: Emergencias reales)", ok: false },
+
+                { t: "c)Se indica indica hioscina 20mg y Dimenhidrinato 50mg por via endovenosa y traslado a Clinica con otro diagnostico asociado", fb: ".. Correcto y el diagnostico mas probable es : Pancreatitis aguda, resaltando la importancia de tomar examenes auxiliares para descartar otras patologias. Recordar la politica N°10  Todo paciente con dolor abdominal debe descartarse un cuadro de abdomen agudo y debe constar en la historia clínica, NO se aplican analgésicos en cuadros de dolor abdominal agudo.   ", ok: true }
+
             ],
+
             correctas: [2]
+
         }
+
     ];
 
-    function startApp() {
+
+
+function startApp() {
         const input = document.getElementById('docInput');
-        if(!input || !input.value.trim()) return alert("Ingrese su nombre");
+        const name = input.value.trim();
+        if(!name) return alert("Ingrese su nombre");
         
-        document.getElementById('headerDoc').innerText = "MÉDICO: " + input.value.toUpperCase();
-        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('headerDoc').innerText = name.toUpperCase();
+        document.getElementById('loginOverlay').setAttribute("style", "display:none !important");
         renderSlide();
     }
 
+
+
     function renderSlide() {
+
         selectedFirst = false;
+
         const q = banco[current];
+
         document.getElementById('caseCounter').innerText = `CASO ${current + 1} DE ${banco.length}`;
+
         document.getElementById('caseText').innerText = q.caso;
+
         document.getElementById('questionText').innerText = q.pregunta;
+
         document.getElementById('nextBtn').style.display = 'none';
+
         document.getElementById('finishBtn').style.display = 'none';
-        
+
         const container = document.getElementById('optionsContainer');
+
         container.innerHTML = '';
-        
+
         q.opciones.forEach((opt, i) => {
+
             const card = document.createElement('div');
+
             card.className = 'option-card';
+
             card.id = `card-${i}`;
+
             card.innerHTML = `<div style="font-weight:600; font-size:0.9rem;">${opt.t}</div><div id="fb-${i}" class="feedback"></div>`;
+
             card.onclick = function() { showFeedback(i); };
+
             container.appendChild(card);
+
         });
+
         window.scrollTo(0, 0);
+
     }
+
+
 
     function showFeedback(idx) {
-        if (selectedFirst) return; 
-        
+
         const q = banco[current];
+
         const opt = q.opciones[idx];
+
         const fbDiv = document.getElementById(`fb-${idx}`);
-        
-        selectedFirst = true;
+
         fbDiv.innerText = opt.fb;
+
         fbDiv.style.display = 'block';
+
         fbDiv.className = 'feedback ' + (opt.ok ? 'success' : 'error');
-        
-        document.getElementById(`card-${idx}`).classList.add('selected');
-        historialRespuestas.push(opt.t);
-        
-        if(opt.ok) { contadorCorrectas++; } else { contadorIncorrectas++; }
-        
-        q.correctas.forEach(cIdx => {
-            document.getElementById(`card-${cIdx}`).classList.add('correct-key');
-        });
 
-        if(current < banco.length - 1) { 
-            document.getElementById('nextBtn').style.display = 'block'; 
-        } else { 
-            document.getElementById('finishBtn').style.display = 'block'; 
+        if (!selectedFirst) {
+
+            selectedFirst = true;
+
+            document.getElementById(`card-${idx}`).classList.add('selected');
+
+            historialRespuestas.push(opt.t);
+
+            if(opt.ok) { contadorCorrectas++; } else { contadorIncorrectas++; }
+
+            q.correctas.forEach(cIdx => {
+
+                document.getElementById(`card-${cIdx}`).classList.add('correct-key');
+
+            });
+
+            if(current < banco.length - 1) { document.getElementById('nextBtn').style.display = 'block'; } 
+
+            else { document.getElementById('finishBtn').style.display = 'block'; }
+
         }
+
     }
 
-    function nextSlide() { 
-        current++; 
-        renderSlide(); 
-    }
+
+
+    function nextSlide() { current++; renderSlide(); }
+
+
 
     function enviarYFinalizar() {
+
         const payload = {
+
             medico: document.getElementById('headerDoc').innerText,
+
             respuestas: historialRespuestas,
+
             correctas: contadorCorrectas,
+
             incorrectas: contadorIncorrectas
+
         };
+
         fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+
         document.querySelector('.dashboard').innerHTML = `
+
             <div style="padding:60px 20px; text-align:center;">
+
                 <h1 style="color:var(--primary-green)">¡Completado!</h1>
+
                 <p>Auditoría enviada correctamente.</p>
+
                 <br><button class="btn btn-primary" onclick="location.reload()">Nuevo Registro</button>
+
             </div>
+
         `;
+
     }
+
 </script>
 
+
+
 </body>
+
 </html>
